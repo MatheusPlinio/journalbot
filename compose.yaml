@@ -67,6 +67,8 @@ services:
 networks:
     sail:
         driver: bridge
+        external: true
+        name: journal-network
 volumes:
     sail-pgsql:
         driver: local
