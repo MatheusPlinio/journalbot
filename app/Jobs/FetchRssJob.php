@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Article;
+use App\Models\NewsSource;
+use Exception;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Http;
+use Log;
+use Str;
+
+class FetchRssJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public NewsSource $source)
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        try {
+            $response = Http::get($this->source->url);
+
+            if ($response->failed()) {
+                throw new Exception("Falha ao buscar RSS: {$this->source->url}");
+            }
+
+            $xml = simplexml_load_string($response->body());
+            if (!$xml || !isset($xml->channel->item)) {
+                throw new Exception("RSS inválido ou vazio: {$this->source->url}");
+            }
+
+            $newArticles = [];
+
+            foreach ($xml->channel->item as $item) {
+                $title = (string) $item->title;
+                $link = (string) $item->link;
+                $summary = (string) $item->description ?? '';
+                $pubDate = (string) $item->pubDate;
+
+                if (Article::where('title', $title)->orWhere('slug', Str::slug($title))->exists()) {
+                    continue;
+                }
+
+                $article = Article::create([
+                    'title' => $title,
+                    'slug' => Str::slug($title),
+                    'summary' => $summary,
+                    'content' => $summary,
+                    'link' => $link,
+                    'category_id' => $this->source->category_id,
+                    'published_at' => $pubDate,
+                ]);
+
+                $newArticles[] = $article;
+            }
+
+            foreach ($newArticles as $article) {
+                ProcessNewsSummaryJob::dispatch($article)
+                    ->onQueue('ai');
+            }
+        } catch (\Throwable $e) {
+            Log::error("Erro no FetchRssJob ({$this->source->name}): " . $e->getMessage());
+        } finally {
+            self::dispatch($this->source)
+                ->delay(now()->addMinutes(10))
+                ->onQueue('default');
+        }
+    }
+}
