@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Contracts\MercadoPagoInterfaceService;
+use App\Services\MercadoPagoService;
 use Dedoc\Scramble\Scramble;
 use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
@@ -14,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        
+        $this->app->singleton(MercadoPagoInterfaceService::class, MercadoPagoService::class);
     }
 
     /**
