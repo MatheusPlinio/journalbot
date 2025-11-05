@@ -16,7 +16,7 @@ class MercadoPagoService implements MercadoPagoInterfaceService
         MercadoPagoConfig::setAccessToken(config('services.mercadopago.token'));
     }
 
-    public function createPixPayment(float $amount, string $email): array
+    public function createPixPayment(float $amount, string $email, string $description): array
     {
         try {
             $client = new PaymentClient();
@@ -28,7 +28,7 @@ class MercadoPagoService implements MercadoPagoInterfaceService
 
             $payment = $client->create([
                 'transaction_amount' => $amount,
-                'description' => 'Pagamento via Pix',
+                'description' => $description,
                 'payment_method_id' => 'pix',
                 'payer' => [
                     'email' => $email,

@@ -42,5 +42,8 @@ return [
     'mercadopago' => [
         'token' => env('TOKEN_API_MERCADOPAGO', ""),
         'sandbox' => env('MERCADOPAGO_SANDBOX', false),
+    ],
+    'pix' => [
+        'key' => env("KEY_PIX", "")
     ]
 ];

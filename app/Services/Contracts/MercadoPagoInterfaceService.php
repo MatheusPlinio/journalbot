@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface MercadoPagoInterfaceService
 {
-    public function createPixPayment(float $amount, string $email): array;
+    public function createPixPayment(float $amount, string $email, string $description): array;
 }
