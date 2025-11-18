@@ -3,10 +3,10 @@
 namespace App\Repositories\Contracts;
 
 use App\Models\Invoice;
-use App\Models\User;
+use App\Models\PixPayment;
 
 interface InvoiceRepositoryInterface
 {
-    public function create(User $user, array $data): Invoice;
+    public function create(array $data): PixPayment;
     public function findByExternalId(string $externalId): ?Invoice;
 }

@@ -32,8 +32,7 @@ class MercadoPagoService implements MercadoPagoInterfaceService
                 'payment_method_id' => 'pix',
                 'payer' => [
                     'email' => $email,
-                ],
-                'date_of_expiration' => now()->addMinutes(7)->toIso8601String()
+                ]
             ], $options);
 
             return [

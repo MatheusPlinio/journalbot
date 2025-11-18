@@ -17,12 +17,7 @@ return new class extends Migration {
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['pending', 'paid', 'expired', 'cancelled'])->default('pending');
             $table->string('description')->nullable();
-
             $table->timestamps();
-        });
-
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->enum('payable_type', ['pix_payments'])->change();
         });
     }
 
