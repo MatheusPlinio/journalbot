@@ -39,4 +39,11 @@ return [
         'api_key' => env('EVOLUTION_API_KEY'),
         'instance' => env('EVOLUTION_INSTANCE', 'journal'),
     ],
+    'mercadopago' => [
+        'token' => env('TOKEN_API_MERCADOPAGO', ""),
+        'sandbox' => env('MERCADOPAGO_SANDBOX', false),
+    ],
+    'pix' => [
+        'key' => env("KEY_PIX", "")
+    ]
 ];
