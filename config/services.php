@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -14,36 +13,43 @@ return [
     |
     */
 
-    'postmark' => [
-        'token' => env('POSTMARK_TOKEN'),
+    "postmark" => [
+        "token" => env("POSTMARK_TOKEN"),
     ],
 
-    'resend' => [
-        'key' => env('RESEND_KEY'),
+    "resend" => [
+        "key" => env("RESEND_KEY"),
     ],
 
-    'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    "ses" => [
+        "key" => env("AWS_ACCESS_KEY_ID"),
+        "secret" => env("AWS_SECRET_ACCESS_KEY"),
+        "region" => env("AWS_DEFAULT_REGION", "us-east-1"),
     ],
 
-    'slack' => [
-        'notifications' => [
-            'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+    "slack" => [
+        "notifications" => [
+            "bot_user_oauth_token" => env("SLACK_BOT_USER_OAUTH_TOKEN"),
+            "channel" => env("SLACK_BOT_USER_DEFAULT_CHANNEL"),
         ],
     ],
-    'evolution' => [
-        'base_url' => env('EVOLUTION_BASE_URL', 'http://localhost:8081'),
-        'api_key' => env('EVOLUTION_API_KEY'),
-        'instance' => env('EVOLUTION_INSTANCE', 'journal'),
+    "evolution" => [
+        "base_url" => env("EVOLUTION_BASE_URL", "http://localhost:8081"),
+        "api_key" => env("EVOLUTION_API_KEY"),
+        "instance" => env("EVOLUTION_INSTANCE", "journal"),
     ],
-    'mercadopago' => [
-        'token' => env('TOKEN_API_MERCADOPAGO', ""),
-        'sandbox' => env('MERCADOPAGO_SANDBOX', false),
+    "mercadopago" => [
+        "token" => env("TOKEN_API_MERCADOPAGO", ""),
+        "sandbox" => env("MERCADOPAGO_SANDBOX", false),
     ],
-    'pix' => [
-        'key' => env("KEY_PIX", "")
-    ]
+    "pix" => [
+        "key" => env("KEY_PIX", ""),
+    ],
+    "gemini" => [
+        "api_key" => env("GEMINI_API_KEY"),
+        "base_url" => env(
+            "GEMINI_BASE_URL",
+            "https://generativelanguage.googleapis.com/v1beta/models/",
+        ),
+    ],
 ];
