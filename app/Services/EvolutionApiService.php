@@ -18,7 +18,7 @@ class EvolutionApiService
         $this->instance = $instance ?? config("services.evolution.instance");
     }
 
-    public function sendText(string $number, string $message): bool
+    public function sendText(string $number, string $message, bool $linkPreview = false): bool
     {
         try {
             $number = preg_replace("/\D/", "", $number);
@@ -27,9 +27,10 @@ class EvolutionApiService
                 "Content-Type" => "application/json",
                 "apikey" => $this->apiKey,
             ])->post("{$this->baseUrl}/message/sendText/{$this->instance}", [
-                "number" => $number,
-                "text" => $message,
-            ]);
+                        "number" => $number,
+                        "text" => $message,
+                        "linkPreview" => $linkPreview,
+                    ]);
 
             if ($response->failed()) {
                 Log::error("Falha ao enviar mensagem WhatsApp", [

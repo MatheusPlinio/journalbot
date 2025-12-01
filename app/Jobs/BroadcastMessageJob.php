@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\Article;
+use App\Models\BroadcastMessage;
 use App\Services\EvolutionApiService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,14 +15,14 @@ class BroadcastMessageJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public Article $article;
+    public BroadcastMessage $broadcastMessage;
 
     /**
      * Cria a instância do Job.
      */
-    public function __construct(Article $article)
+    public function __construct(BroadcastMessage $broadcastMessage)
     {
-        $this->article = $article;
+        $this->broadcastMessage = $broadcastMessage;
     }
 
     /**
@@ -30,16 +30,18 @@ class BroadcastMessageJob implements ShouldQueue
      */
     public function handle(EvolutionApiService $evolutionApiService)
     {
-        $category = $this->article->category;
+        $article = $this->broadcastMessage->article;
+        $category = $article->category;
 
         if (!$category) {
-            Log::warning("Artigo sem categoria: {$this->article->id}");
+            Log::warning("Artigo sem categoria: {$article->id}");
             return;
         }
 
-        $users = $category->users()
-            ->role('client')
-            ->whereNotNull('phone')
+        $users = $category
+            ->users()
+            ->role("client")
+            ->whereNotNull("phone")
             ->get();
 
         if ($users->isEmpty()) {
@@ -47,12 +49,23 @@ class BroadcastMessageJob implements ShouldQueue
             return;
         }
 
-        $message = "*{$this->article->title}*\n\n{$this->article->summary}\n\n🔗 Leia mais: {$this->article->url}";
+        $message = $this->broadcastMessage->message_text;
+        $sentCount = 0;
 
         foreach ($users as $user) {
-            $evolutionApiService->sendText($user->phone, $message);
+            if ($evolutionApiService->sendText($user->phone, $message, true)) {
+                $sentCount++;
+            }
         }
 
-        Log::info("Mensagem enviada para categoria {$category->name} ({$users->count()} usuários)");
+        if ($sentCount > 0) {
+            $this->broadcastMessage->update([
+                'sent_at' => now(),
+            ]);
+        }
+
+        Log::info(
+            "Mensagem enviada para categoria {$category->name} ({$sentCount}/{$users->count()} usuários)",
+        );
     }
 }

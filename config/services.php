@@ -52,4 +52,8 @@ return [
             "https://generativelanguage.googleapis.com/v1beta/models/",
         ),
     ],
+    "openrouter" => [
+        "url" => env("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"),
+        "key" => env("OPENROUTER_API_KEY"),
+    ]
 ];

@@ -13,6 +13,7 @@ class Article extends Model
         'title',
         'slug',
         'summary',
+        'author',
         'content',
         'link',
         'category_id',

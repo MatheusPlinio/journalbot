@@ -31,6 +31,7 @@ class FetchRssJob implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Iniciando FetchRssJob para: {$this->source->name}");
         try {
             $response = Http::get($this->source->url);
 
@@ -46,6 +47,10 @@ class FetchRssJob implements ShouldQueue
             $newArticles = [];
 
             foreach ($xml->channel->item as $item) {
+                $namespaces = $xml->getNamespaces(true);
+                $dc = $item->children($namespaces['dc'] ?? null);
+                $author = (string) ($dc->creator ?? $item->author ?? 'Desconhecido');
+
                 $title = (string) $item->title;
                 $link = (string) $item->link;
                 $summary = (string) $item->description ?? '';
@@ -59,6 +64,7 @@ class FetchRssJob implements ShouldQueue
                     'title' => $title,
                     'slug' => Str::slug($title),
                     'summary' => $summary,
+                    'author' => $author,
                     'content' => $summary,
                     'link' => $link,
                     'category_id' => $this->source->category_id,
@@ -68,6 +74,8 @@ class FetchRssJob implements ShouldQueue
                 $newArticles[] = $article;
             }
 
+            Log::info("Encontrados " . count($newArticles) . " novos artigos para {$this->source->name}");
+
             foreach ($newArticles as $article) {
                 ProcessNewsSummaryJob::dispatch($article)
                     ->onQueue('ai');
@@ -75,6 +83,7 @@ class FetchRssJob implements ShouldQueue
         } catch (\Throwable $e) {
             Log::error("Erro no FetchRssJob ({$this->source->name}): " . $e->getMessage());
         } finally {
+            Log::info("Reagendando FetchRssJob para {$this->source->name} em 10 minutos.");
             self::dispatch($this->source)
                 ->delay(now()->addMinutes(10))
                 ->onQueue('default');

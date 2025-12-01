@@ -11,10 +11,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'slug'
-    ];
+    protected $fillable = ["name", "slug"];
 
     public function users(): BelongsToMany
     {
@@ -24,5 +21,15 @@ class Category extends Model
     public function sources()
     {
         return $this->hasMany(NewsSource::class);
+    }
+
+    public function prompts()
+    {
+        return $this->hasMany(Prompt::class);
+    }
+
+    public function summaryPrompt()
+    {
+        return $this->prompts()->where("type", "summary")->first();
     }
 }
