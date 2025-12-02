@@ -12,15 +12,20 @@ class NewsSource extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
         'url',
         'category_id',
+        'source_provider_id',
         'is_active',
     ];
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function source_provider(): BelongsTo
+    {
+        return $this->belongsTo(SourceProvider::class, 'source_provider_id');
     }
 
     public function news(): HasMany

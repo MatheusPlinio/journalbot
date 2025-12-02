@@ -23,7 +23,7 @@ class User extends Authenticatable implements FilamentUser
      *
      * @var list<string>
      */
-    protected $fillable = ["name", "email", "password", "phone", "is_active"];
+    protected $fillable = ["name", "email", "password", "phone", "is_active", "subscription_expires_at"];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,6 +48,11 @@ class User extends Authenticatable implements FilamentUser
     public function setPasswordAttribute($value)
     {
         $this->attributes["password"] = Hash::make($value);
+    }
+
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = preg_replace('/[^0-9]/', '', $value);
     }
 
     public function canAccessPanel(Panel $panel): bool

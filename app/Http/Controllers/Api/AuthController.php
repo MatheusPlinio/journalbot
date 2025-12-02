@@ -31,7 +31,14 @@ class AuthController extends Controller
             return response()->json(["message" => "User not created"], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return response()->json(["message" => "User created successfully"], Response::HTTP_CREATED);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'name' => $user->name,
+            'email' => $user->email,
+            'accessToken' => $token,
+            'is_active' => $user->is_active
+        ], Response::HTTP_CREATED);
     }
 
     /**

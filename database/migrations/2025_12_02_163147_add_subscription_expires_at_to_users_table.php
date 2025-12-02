@@ -10,12 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('news_sources', function (Blueprint $table) {
-            $table->id();
-            $table->string('url');
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('subscription_expires_at')->nullable()->after('is_active');
         });
     }
 
@@ -24,6 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('news_sources');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('subscription_expires_at');
+        });
     }
 };

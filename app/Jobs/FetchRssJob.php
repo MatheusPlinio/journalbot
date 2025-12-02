@@ -13,6 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
 use Log;
 use Str;
+use Carbon\Carbon;
 
 class FetchRssJob implements ShouldQueue
 {
@@ -54,7 +55,7 @@ class FetchRssJob implements ShouldQueue
                 $title = (string) $item->title;
                 $link = (string) $item->link;
                 $summary = (string) $item->description ?? '';
-                $pubDate = (string) $item->pubDate;
+                $pubDate = Carbon::parse((string) $item->pubDate, 'America/Sao_Paulo')->utc();
 
                 if (Article::where('title', $title)->orWhere('slug', Str::slug($title))->exists()) {
                     continue;
@@ -77,8 +78,10 @@ class FetchRssJob implements ShouldQueue
             Log::info("Encontrados " . count($newArticles) . " novos artigos para {$this->source->name}");
 
             foreach ($newArticles as $article) {
-                ProcessNewsSummaryJob::dispatch($article)
-                    ->onQueue('ai');
+                if ($article->published_at && $article->published_at->gt(now()->subHour())) {
+                    ProcessNewsSummaryJob::dispatch($article)
+                        ->onQueue('ai');
+                }
             }
         } catch (\Throwable $e) {
             Log::error("Erro no FetchRssJob ({$this->source->name}): " . $e->getMessage());

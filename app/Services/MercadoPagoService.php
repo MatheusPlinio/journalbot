@@ -50,4 +50,23 @@ class MercadoPagoService implements MercadoPagoInterfaceService
             ];
         }
     }
+
+    public function getPayment(string $id): array
+    {
+        try {
+            $client = new PaymentClient();
+            $payment = $client->get($id);
+
+            return [
+                'id' => $payment->id,
+                'status' => $payment->status,
+                'amount' => $payment->transaction_amount,
+            ];
+        } catch (Exception $e) {
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
 }

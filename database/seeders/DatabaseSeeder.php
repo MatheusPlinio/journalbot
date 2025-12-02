@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ArticleSeeder::class,
             BroadcastMessageSeeder::class,
+            SourceProviderSeeder::class,
         ]);
     }
 }
