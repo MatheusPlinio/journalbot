@@ -10,8 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('news_sources', function (Blueprint $table) {
-            $table->foreignId('source_provider_id')->nullable()->constrained()->onDelete('set null');
+        Schema::create('rss', function (Blueprint $table) {
+            $table->id();
+            $table->text('link');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -20,9 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('news_sources', function (Blueprint $table) {
-            $table->dropForeign(['source_provider_id']);
-            $table->dropColumn('source_provider_id');
-        });
+        Schema::dropIfExists('rss');
     }
 };

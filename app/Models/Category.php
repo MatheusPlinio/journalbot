@@ -18,18 +18,8 @@ class Category extends Model
         return $this->belongsToMany(User::class);
     }
 
-    public function sources()
+    public function rsses(): BelongsToMany
     {
-        return $this->hasMany(NewsSource::class);
-    }
-
-    public function prompts()
-    {
-        return $this->hasMany(Prompt::class);
-    }
-
-    public function summaryPrompt()
-    {
-        return $this->prompts()->where("type", "summary")->first();
+        return $this->belongsToMany(Rss::class);
     }
 }

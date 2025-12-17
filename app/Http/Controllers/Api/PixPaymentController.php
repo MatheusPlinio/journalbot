@@ -14,7 +14,8 @@ class PixPaymentController extends Controller
     public function __construct(
         protected MercadoPagoInterfaceService $mercadoPagoService,
         protected InvoiceRepositoryInterface $invoiceRepository,
-    ) {}
+    ) {
+    }
 
     public function create(PixPaymentStoreRequest $request): JsonResponse
     {
@@ -51,6 +52,7 @@ class PixPaymentController extends Controller
                 "response_payload" => $payment,
                 "amount" => $payment["amount"],
                 "description" => $plan["description"],
+                "plan_id" => $plan->id,
             ]);
 
             if (!$invoice) {

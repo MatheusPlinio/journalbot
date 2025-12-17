@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Prompts\Pages;
+namespace App\Filament\Resources\Rsses\Pages;
 
-use App\Filament\Resources\Prompts\PromptResource;
+use App\Filament\Resources\Rsses\RssResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
-class ListPrompts extends ListRecords
+class ListRsses extends ListRecords
 {
-    protected static string $resource = PromptResource::class;
+    protected static string $resource = RssResource::class;
 
     protected function getHeaderActions(): array
     {

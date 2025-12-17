@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::create('broadcast_messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('article_id')->constrained()->onDelete('cascade');
             $table->text('message_text');
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();

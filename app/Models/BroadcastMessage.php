@@ -11,13 +11,7 @@ class BroadcastMessage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'article_id',
         'message_text',
         'sent_at',
     ];
-
-    public function article(): BelongsTo
-    {
-        return $this->belongsTo(Article::class);
-    }
 }

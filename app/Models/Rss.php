@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Prompt extends Model
+class Rss extends Model
 {
-    protected $fillable = ["category_id", "type", "prompt"];
+    protected $table = 'rss';
+
+    protected $fillable = [
+        'link',
+        'category_id',
+    ];
 
     public function category()
     {

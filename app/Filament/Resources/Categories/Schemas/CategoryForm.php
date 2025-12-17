@@ -12,14 +12,8 @@ class CategoryForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Nome')
-                    ->required()
-                    ->maxLength(100),
-                TextInput::make('slug')
-                    ->label('Slug')
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(100),
+                    ->required(),
+                TextInput::make('slug'),
             ]);
     }
 }
