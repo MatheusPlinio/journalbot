@@ -19,9 +19,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
-            ArticleSeeder::class,
-            BroadcastMessageSeeder::class,
-            SourceProviderSeeder::class,
         ]);
     }
 }

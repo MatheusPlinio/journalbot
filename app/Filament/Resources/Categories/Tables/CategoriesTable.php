@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Categories\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -14,16 +15,24 @@ class CategoriesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Nome')->searchable(),
-                TextColumn::make('slug')->label('Slug')->copyable(),
-                TextColumn::make('sources_count')
-                    ->counts('sources')
-                    ->label('Fontes cadastradas'),
+                TextColumn::make('name')
+                    ->searchable(),
+                TextColumn::make('slug')
+                    ->searchable(),
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

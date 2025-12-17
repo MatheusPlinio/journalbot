@@ -10,12 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create("prompts", function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("category_id")->constrained()->cascadeOnDelete();
-            $table->string("type")->default("summary");
-            $table->text("prompt");
-            $table->timestamps();
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->foreignId('plan_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -24,6 +20,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists("prompts");
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->dropForeign(['plan_id']);
+            $table->dropColumn('plan_id');
+        });
     }
 };

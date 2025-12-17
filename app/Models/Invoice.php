@@ -14,12 +14,18 @@ class Invoice extends Model
         "payable_type",
         "amount",
         "status",
-        "description"
+        "description",
+        "plan_id"
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
     }
 
     public function payable(): MorphTo

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ExpireUserSubscriptionJob;
 use App\Models\PixPayment;
 use App\Services\Contracts\MercadoPagoInterfaceService;
 use Carbon\Carbon;
@@ -51,10 +52,18 @@ class MercadoPagoWebhookController extends Controller
 
                     $user = $invoice->user;
                     if ($user) {
+                        $plan = $invoice->plan;
+
+                        $durationDays = $plan ? $plan->duration_days : 30;
+
+                        $expiresAt = Carbon::now()->addDays($durationDays);
+
                         $user->update([
                             'is_active' => true,
-                            'subscription_expires_at' => Carbon::now()->addMonth()
+                            'subscription_expires_at' => $expiresAt
                         ]);
+
+                        ExpireUserSubscriptionJob::dispatch($user->id)->delay($expiresAt);
                     }
                 }
             }

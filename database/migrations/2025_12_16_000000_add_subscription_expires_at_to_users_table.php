@@ -10,12 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('source_providers', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('logo_url')->nullable();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('subscription_expires_at')->nullable();
         });
     }
 
@@ -24,6 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('source_providers');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['subscription_expires_at']);
+        });
     }
 };

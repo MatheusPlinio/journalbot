@@ -55,5 +55,9 @@ return [
     "openrouter" => [
         "url" => env("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1/chat/completions"),
         "key" => env("OPENROUTER_API_KEY"),
-    ]
+    ],
+    "webhook_n8n" => [
+        "url" => env("WEBHOOK_N8N_BASE_URL", "https://n8n.matheusdevdeploy.shop/webhook-test/news"),
+        "token" => env("WEBHOOK_N8N_API_TOKEN"),
+    ],
 ];

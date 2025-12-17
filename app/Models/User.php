@@ -42,6 +42,8 @@ class User extends Authenticatable implements FilamentUser
         return [
             "email_verified_at" => "datetime",
             "password" => "hashed",
+            "subscription_expires_at" => "datetime",
+            "auto_renew" => "boolean",
         ];
     }
 
@@ -63,5 +65,14 @@ class User extends Authenticatable implements FilamentUser
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function scopeActiveClients($query)
+    {
+        return $query
+            ->role('client')
+            ->whereNotNull('phone')
+            ->where('phone', '!=', '')
+            ->where('is_active', true);
     }
 }
