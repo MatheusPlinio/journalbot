@@ -19,4 +19,4 @@ Schedule::job(function () {
             'body' => $response->json(),
         ]);
     }
-})->everyMinute();
+})->everyFifteenMinutes()->withoutOverlapping()->onOneServer();
