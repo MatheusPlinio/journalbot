@@ -32,6 +32,10 @@ class PlanForm
                     ->default(30),
                 Toggle::make('is_active')
                     ->required(),
+                TextInput::make('order_by')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
             ]);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Client\PreferencesController;
 use App\Http\Controllers\Api\PixPaymentController;
 use App\Http\Controllers\Api\PlanController;
 use App\Http\Controllers\Api\MercadoPagoWebhookController;
@@ -28,4 +29,19 @@ Route::prefix("/v1")->group(function () {
     Route::post("/webhook/send-messages", [WhatsappWebhook::class, 'sendMessage'])
         ->middleware("auth:sanctum")
         ->name("webhook.send-messages");
+
+    Route::middleware('auth:sanctum')
+        ->prefix('client/preferences')
+        ->group(function () {
+
+            Route::get('/', [PreferencesController::class, 'index']);
+
+            Route::get('/categories', [PreferencesController::class, 'categories']);
+            Route::put('/categories', [PreferencesController::class, 'syncCategories']);
+
+            Route::get('/sources', [PreferencesController::class, 'sources']);
+            Route::put('/sources', [PreferencesController::class, 'syncSources']);
+
+            Route::put('/notifications', [PreferencesController::class, 'updateNotifications']);
+        });
 });

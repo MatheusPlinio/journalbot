@@ -13,7 +13,8 @@ class Plan extends Model
         "benefits",
         "price",
         "duration_days",
-        "is_active"
+        "is_active",
+        "order_by",
     ];
 
     protected $casts = [

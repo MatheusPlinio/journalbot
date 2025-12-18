@@ -75,4 +75,14 @@ class User extends Authenticatable implements FilamentUser
             ->where('phone', '!=', '')
             ->where('is_active', true);
     }
+
+    public function sources()
+    {
+        return $this->belongsToMany(
+            Source::class,
+            'sources_users',
+            'user_id',
+            'source_id'
+        );
+    }
 }
