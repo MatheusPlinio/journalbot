@@ -41,6 +41,7 @@ return [
     "mercadopago" => [
         "token" => env("TOKEN_API_MERCADOPAGO", ""),
         "sandbox" => env("MERCADOPAGO_SANDBOX", false),
+        "webhook_secret" => env("MERCADOPAGO_WEBHOOK_SECRET")
     ],
     "pix" => [
         "key" => env("KEY_PIX", ""),
