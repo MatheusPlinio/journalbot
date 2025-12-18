@@ -62,17 +62,38 @@ class MercadoPagoWebhookController extends Controller
 
     private function isValidSignature(Request $request): bool
     {
-        $signature = $request->header('X-Signature');
+        $signatureHeader = $request->header('X-Signature');
         $requestId = $request->header('X-Request-Id');
 
-        if (!$signature || !$requestId) {
+        if (!$signatureHeader || !$requestId) {
             return false;
         }
 
-        $secret = config('services.mercadopago.webhook_secret');
-        $payload = $request->getContent();
-        $expectedSignature = hash_hmac('sha256', $payload . $requestId, $secret);
+        $parts = explode(',', $signatureHeader);
+        $ts = null;
+        $hash = null;
+        foreach ($parts as $part) {
+            [$key, $value] = explode('=', $part, 2);
+            if ($key === 'ts') {
+                $ts = $value;
+            } elseif ($key === 'v1') {
+                $hash = $value;
+            }
+        }
 
-        return hash_equals($expectedSignature, $signature);
+        if (!$ts || !$hash) {
+            return false;
+        }
+
+        $dataId = $request->query('data.id') ?? $request->input('data.id');
+
+        $manifest = "id:{$dataId};request-id:{$requestId};ts:{$ts};";
+
+        $secret = config('services.mercadopago.webhook_secret');
+
+        $expectedHash = hash_hmac('sha256', $manifest, $secret);
+
+        return hash_equals($expectedHash, $hash);
     }
+
 }
