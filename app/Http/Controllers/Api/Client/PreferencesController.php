@@ -25,7 +25,7 @@ class PreferencesController extends Controller
         $user = $request->user();
 
         return response()->json([
-            'all' => Category::select('id', 'name')->get(),
+            'all' => Category::select('id', 'slug')->get(),
             'selected' => $user->categories()->pluck('categories.id'),
         ]);
     }
